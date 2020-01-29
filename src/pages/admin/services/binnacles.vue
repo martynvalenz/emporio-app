@@ -10,7 +10,7 @@
       </div>
       <q-card class="q-mt-md">
          <q-card-section>
-            <q-btn label="Agregar Bitácora" icon-right="add" color="primary" />
+            <q-btn label="Agregar Bitácora" icon-right="add" color="secondary" />
          </q-card-section>
          <q-card-section>
             <q-markup-table wrap-cells>

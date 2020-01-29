@@ -11,9 +11,24 @@
       <q-card class="q-mt-md">
          <q-card-section>
             <div class="row">
-               <q-btn label="Agregar Servicio" icon-right="add" color="primary" @click="addService" />
+               <q-btn label="Agregar Servicio" icon-right="add" color="secondary" class="q-mx-xs" @click="addService" />
+               <q-btn label="Ver comisiones" icon-right="money" color="positive" class="q-mx-xs" />
                <q-space />
                <q-btn round push color="grey" icon="sync" @click="Reload"/>
+            </div>
+         </q-card-section>
+         <q-card-section>
+            <div class="row">
+               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 q-pa-xs">
+                  <q-input v-model="search_table" label="Búsqueda" outlined v-on:keyup.enter="Reload">
+                     <template v-slot:prepend>
+                        <q-icon name="search" />
+                     </template>
+                     <template v-slot:append>
+                        <q-icon name="close" @click="clearSearch" class="cursor-pointer" />
+                     </template>
+                  </q-input>
+               </div>
             </div>
          </q-card-section>
          <q-card-section>

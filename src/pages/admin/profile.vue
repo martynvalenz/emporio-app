@@ -27,7 +27,7 @@
                </div>
                <q-separator vertical inset class="q-mx-md" />
                <div class="column">
-                  <q-btn color="primary" class="q-ma-xs" label="Guardar Cambios" :loading="loading" @click="saveUser" icon-right="save" />
+                  <q-btn color="secondary" class="q-ma-xs" label="Guardar Cambios" :loading="loading" @click="saveUser" icon-right="save" />
                   <q-btn color="grey" class="q-ma-xs" label="Cambiar contraseña" @click="changePassword" icon-right="vpn_key" />
                </div>
             </div>
@@ -65,13 +65,13 @@
                   </div>
                </div>
                <div class="col-xs-8 col-sm-8 col-md-4 col-lg-2 col-xl-2 q-pa-xs">
-                  <q-input v-model="phone" label="Celular" outlined mask="(###) ### - ####" fill-mask=""></q-input>
+                  <q-input v-model="phone" label="Celular" outlined mask="(###) ### - ####" ></q-input>
                   <div class="text-subtitle2 text-red" v-for="error in errors.phone" :key="error">
                      {{error}}
                   </div>
                </div>
                <div class="col-xs-8 col-sm-8 col-md-4 col-lg-2 col-xl-2 q-pa-xs">
-                  <q-input v-model="office" label="Oficina" outlined mask="(###) ### - ####" fill-mask=""></q-input>
+                  <q-input v-model="office" label="Oficina" outlined mask="(###) ### - ####" ></q-input>
                   <div class="text-subtitle2 text-red" v-for="error in errors.office" :key="error">
                      {{error}}
                   </div>
@@ -95,7 +95,7 @@
                </div>
             </div>
             <div class="row">
-               <q-btn color="primary" class="q-ma-xs" label="Guardar Cambios" :loading="loading" @click="saveUser" icon-right="save" />
+               <q-btn color="secondary" class="q-ma-xs" label="Guardar Cambios" :loading="loading" @click="saveUser" icon-right="save" />
             </div>
          </q-card-section>
          <password ref="change_password"></password>

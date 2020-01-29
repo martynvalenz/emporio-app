@@ -10,7 +10,7 @@
       </div>
       <q-card class="q-mt-md">
          <q-card-section>
-            <q-btn label="subcategoría" icon-right="add" color="primary" @click="newSubcategory" />
+            <q-btn label="subcategoría" icon-right="add" color="secondary" @click="newSubcategory" />
          </q-card-section>
          <q-card-section>
             <q-markup-table wrap-cells>

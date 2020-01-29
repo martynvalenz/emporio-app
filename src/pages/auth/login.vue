@@ -27,7 +27,7 @@
                   <q-btn label="Olvidé mi contraseña" flat color="secondary" to="/auth/remember" />
                </div>
                <div>
-                  <q-btn label="Iniciar sesión" :loading="loading" type="submit" color="primary" class="full-width"/>
+                  <q-btn label="Iniciar sesión" :loading="loading" type="submit" color="secondary" class="full-width"/>
                </div>
             </q-form>
          </q-card-section>
