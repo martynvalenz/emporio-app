@@ -47,7 +47,10 @@ module.exports = function (ctx) {
       directives: [],
 
       // Quasar plugins
-      plugins: ["Meta", "Dialog", "LocalStorage", "SessionStorage", "Notify"]
+      plugins: ["Meta", "Dialog", "LocalStorage", "SessionStorage", "Notify", "Loading"],
+      config: {
+        loading: { 'spinnerColor':'primary' }
+      }
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
