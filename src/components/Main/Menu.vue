@@ -103,7 +103,7 @@
                   <q-icon name="bookmarks" />
                </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="/admin/services/services-catalog" exact router class="q-pl-xl" expand-separator>
+            <q-item clickable v-ripple to="/admin/services/catalog" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
                   Catálogo de Servicios
                </q-item-section>
@@ -111,7 +111,7 @@
                   <q-icon name="chrome_reader_mode" />
                </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
+            <q-item clickable v-ripple to="/admin/services/comissions" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
                   Comisiones
                </q-item-section>
@@ -138,7 +138,7 @@
          </q-expansion-item>
 
          <q-expansion-item expand-separator icon="people" label="Clientes">
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
+            <q-item clickable v-ripple to="/admin/customers/strategies" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
                   Estrategias
                </q-item-section>
@@ -146,7 +146,7 @@
                   <q-icon name="thumb_up" />
                </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
+            <q-item clickable v-ripple to="/admin/customers/customers" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
                   Listado de Clientes
                </q-item-section>
@@ -164,7 +164,7 @@
             </q-item>
          </q-expansion-item>
 
-         <q-item clickable v-ripple to="" exact router>
+         <q-item clickable v-ripple to="/admin/services/services-control" exact router>
             <q-item-section avatar>
                <q-icon name="business_center" />
             </q-item-section>

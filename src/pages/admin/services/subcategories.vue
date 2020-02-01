@@ -59,7 +59,7 @@
                         <q-chip v-else color="negative" dark>Inactivo</q-chip>
                      </td>
                      <td class="text-right">
-                        <q-btn color="grey" icon="menu" size="sm">
+                        <q-btn color="grey" icon="menu" size="sm" flat>
                            <q-menu>
                               <q-list>
                                  <q-item clickable @click="edit(index)" v-ripple class="text-orange">

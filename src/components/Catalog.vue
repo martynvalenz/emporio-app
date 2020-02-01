@@ -1,6 +1,6 @@
 <template>
    <div>
-      <q-dialog v-model="service_dialog" maximized transition-show="slide-up" transition-hide="slide-down">
+      <q-dialog v-model="service_dialog" maximized persistent transition-show="slide-up" transition-hide="slide-down">
          <q-card>
             <q-bar class="bg-primary text-white">
                <div class="text-h6">{{title}}</div>
@@ -175,7 +175,8 @@
             <q-card-section style="background-color:rgba(0,0,0,0.1); color: white; position:fixed; bottom: 0; width:100%;">
                <div class="row">
                   <q-space/>
-                  <q-btn label="Guardar" icon-right="save" color="secondary" size="md" :loading="loading"  @click="ValidateSave" />
+                  <q-btn color="grey" label="Cerrar" v-close-popup class="q-ma-xs" />
+                  <q-btn label="Guardar" icon-right="save" color="secondary" :loading="loading"  @click="ValidateSave" class="q-ma-xs" />
                </div>
             </q-card-section>
          </q-card>
@@ -467,39 +468,39 @@ export default {
          var fee = price - (cost + sales + operations + management)
 
          if(price < 0){
-               this.errors.price = 'El precio del servicio no puede ser negativo'
-               this.loading = false
-               this.$q.notify({
-                  message:'El precio del servicio no puede ser negativo',
-                  color:'negative',
-                  actions: [
-                     { label: 'Cerrar', color: 'white', handler: () => {  } }
-                  ]
-               })
+            this.errors.price = 'El precio del servicio no puede ser negativo'
+            this.loading = false
+            this.$q.notify({
+               message:'El precio del servicio no puede ser negativo',
+               color:'negative',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
          }
          else if(price === 0 && this.authorize === '0'){
-               this.errors.price = 'Debe autorizar el precio de 0'
-               this.errors.authorize = 'Debe autorizar el precio de 0'
-               this.$q.notify({
-                  message:'El precio del servicio no puede ser 0, a menos que habilite la casilla de autorización',
-                  color:'negative',
-                  actions: [
-                     { label: 'Cerrar', color: 'white', handler: () => {  } }
-                  ]
-               })
-               this.loading = false
+            this.errors.price = 'Debe autorizar el precio de 0'
+            this.errors.authorize = 'Debe autorizar el precio de 0'
+            this.$q.notify({
+               message:'El precio del servicio no puede ser 0, a menos que habilite la casilla de autorización',
+               color:'negative',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
+            this.loading = false
          }
          else if(price > 0 && fee < 0 && this.authorize === '0'){
-               this.$q.notify({
-                  message:'El costo y comisiones no pueden ser mayor al precio, a menos que habilite la casilla de autorización',
-                  color:'negative',
-                  actions: [
-                     { label: 'Cerrar', color: 'white', handler: () => {  } }
-                  ]
-               })
-               this.errors.price = 'Debe autorizar el precio'
-               this.errors.authorize = 'Debe autorizar el precio'
-               this.loading = false
+            this.$q.notify({
+               message:'El costo y comisiones no pueden ser mayor al precio, a menos que habilite la casilla de autorización',
+               color:'negative',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
+            this.errors.price = 'Debe autorizar el precio'
+            this.errors.authorize = 'Debe autorizar el precio'
+            this.loading = false
          }
          else if(price >= 0 && fee <= 0 && this.authorize == '1'){
                this.Save()

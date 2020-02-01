@@ -12,7 +12,7 @@
          <q-card-section>
             <div class="row">
                <q-btn label="Agregar Servicio" icon-right="add" color="secondary" class="q-mx-xs" @click="addService" />
-               <q-btn label="Ver comisiones" icon-right="money" color="positive" class="q-mx-xs" />
+               <q-btn label="Ver comisiones" icon-right="money" color="positive" class="q-mx-xs" to="/admin/services/comissions" />
                <q-space />
                <q-btn round push color="grey" icon="sync" @click="Reload"/>
             </div>
@@ -58,7 +58,7 @@
                         <q-chip v-else dark color="negative" label="Inactivo"/>
                      </td>
                      <td class="text-right">
-                        <q-btn color="grey" icon="menu">
+                        <q-btn color="grey" icon="menu" flat>
                            <q-badge v-if="reg.requisites > 0" color="secondary" floating>{{reg.requisites}}</q-badge>
                            <q-badge v-if="reg.requisites == 0" color="negative" floating>{{reg.requisites}}</q-badge>
                            <q-menu>
@@ -79,7 +79,7 @@
                                        Editar
                                     </q-item-section>
                                  </q-item>
-                                 <q-item v-if="reg.status == 1" clickable v-ripple class="text-red" @click="editStatus(index, reg.status)">
+                                 <q-item v-if="reg.status == 1" clickable v-ripple class="text-red" @click="changeStatus(index, reg.status)" :loading="loading">
                                     <q-item-section avatar>
                                        <q-icon name="block" />
                                     </q-item-section>
@@ -87,7 +87,7 @@
                                        Inactivar
                                     </q-item-section>
                                  </q-item>
-                                 <q-item v-else clickable v-ripple class="text-green" @click="editStatus(index, reg.status)">
+                                 <q-item v-else clickable v-ripple class="text-green" @click="changeStatu(index, reg.status)" :loading="loading">
                                     <q-item-section avatar>
                                        <q-icon name="check" />
                                     </q-item-section>
@@ -100,16 +100,12 @@
                         </q-btn>
                      </td>
                   </tr>
-                  <tr>
-                     <td style="width:100%" colspan="8">
-                        <infinite-loading class="text-center" spinner="spiral" @infinite="infiniteScroll" ref="infiniteLoading">
-                           <div slot="no-more">Ya no hay más registros</div>
-                           <div slot="no-results">Se llegó al final de los resultados</div>
-                        </infinite-loading>
-                     </td>
-                  </tr>
                </tbody>
             </q-markup-table>
+            <infinite-loading class="text-center q-pt-md" spinner="spiral" @infinite="infiniteScroll" ref="infiniteLoading">
+               <div slot="no-more">Ya no hay más registros</div>
+               <div slot="no-results">Se llegó al final de los resultados</div>
+            </infinite-loading>
          </q-card-section>
          <q-card-section>
             <Catalog :service_dialog="1" ref="services_form" v-on:newService="newService($event)" v-on:updateService="updateService($event)"></Catalog>
@@ -131,19 +127,11 @@ export default {
    },
 
    components:{Catalog, Process, InfiniteLoading},
+
    data(){
-   return{
+      return{
          //Data
          services:[],
-         columns:[
-            {name:'Clave', label:'Clave', align:'left', field:'code', sortable:true},
-            {name:'Servicio', label:'Servicio', align:'left', field:'service', sortable:true},
-            {name:'Bitácora', label:'Bitácora', align:'left', field:'binnacle', sortable:true},
-            {name:'Moneda', label:'Moneda', align:'left', field:'money_code', sortable:true},
-            {name:'Clave', label:'Clave', align:'left', field:'code', sortable:true},
-            {name:'Clave', label:'Clave', align:'left', field:'code', sortable:true},
-            {name:'Clave', label:'Clave', align:'left', field:'code', sortable:true},
-         ],
          loading_table:false,
          loading:false,
          search_table:'',
@@ -153,7 +141,6 @@ export default {
          services_catalog_id:'',
          status_dialog:false,
          service_status:'',
-         timeout: 6000,
       }
    },
 	
@@ -164,139 +151,132 @@ export default {
 	},
 
 	created(){
-      this.Load();
+      this.Load()
 	},
 
    methods:{
       async Load(){
-      this.$q.loading.show()
-      this.loading_table = true;
-      await this.$axios.post(this.url, {search:this.search_table})
-      .then(res => {
-         this.$q.loading.hide()
-         this.services = res.data.data;
-         this.loading_table = false;
-      })
-      .catch(error => {
-         this.$q.loading.hide()
-         this.loading_table = false;
-      })
-   },
-
-   infiniteScroll($state){
-      setTimeout(() => {
-         this.page++
-         this.$axios.post(this.url, {search:this.search_table})
-         .then( res => {
-
-            let services = res.data.data;
-
-            if(services.length > 0){
-               this.services = this.services.concat(services);
-               $state.loaded()
-            }
-            else{
-               $state.complete()
-            }
+         this.$q.loading.show()
+         this.loading_table = true
+         await this.$axios.post(this.url, {search:this.search_table})
+         .then(res => {
+            this.$q.loading.hide()
+            this.services = res.data.data
+            this.loading_table = false
          })
          .catch(error => {
-
+            this.$q.loading.hide()
+            this.loading_table = false
          })
-      }, 500);
-   },
+      },
 
-   clearSearch(){
-      this.search_table = '';
-      this.services = {};
-      this.page = 1;
-      this.$refs.infiniteLoading.stateChanger.reset();
-      this.Load();
-   },
+      infiniteScroll($state){
+         setTimeout(() => {
+            this.page++
+            this.$axios.post(this.url, {search:this.search_table})
+            .then( res => {
 
-   Reload(){
-      this.services = {};
-      this.page = 1;
-      this.$refs.infiniteLoading.stateChanger.reset();
-      this.Load();
-   },
-   
-   formatPrice(value) {
-      let val = (value/1).toFixed(2).replace('.,', '.')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-   },
+               let services = res.data.data
 
-   addService(){
-      this.$refs.services_form.addService();
-   },
+               if(services.length > 0){
+                  this.services = this.services.concat(services)
+                  $state.loaded()
+               }
+               else{
+                  $state.complete()
+               }
+            })
+            .catch(error => {
 
-   editService(index){
-      const service = this.services[index];
-      this.catalog_selected = index;
-      var service_id = service.id;
-      this.$refs.services_form.editService(service_id);
-   },
+            })
+         }, 500)
+      },
 
-   openProcess(index){
-      const service = this.services[index];
-      var service_id = service.id;
-      this.catalog_selected = index;
-      this.$refs.process_form.openProcess(service_id)
-   },
+      clearSearch(){
+         this.search_table = ''
+         this.services = {}
+         this.page = 1
+         this.$refs.infiniteLoading.stateChanger.reset()
+         this.Load()
+      },
 
-   newService(data){
-      this.services.unshift(data);
-   },
+      Reload(){
+         this.services = {}
+         this.page = 1
+         this.$refs.infiniteLoading.stateChanger.reset()
+         this.Load()
+      },
+      
+      formatPrice(value) {
+         let val = (value/1).toFixed(2).replace('.,', '.')
+         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      },
 
-   updateService(data){
-      // this.services[this.catalog_selected] = data;
-      this.services.splice(this.catalog_selected,1,data);
-      this.catalog_selected = '';
-   },
+      addService(){
+         this.$refs.services_form.addService()
+      },
 
-   editStatus(index, value){
-      const service = this.services[index];
-      this.catalog_selected = index;
-      this.services_catalog_id = service.id;
-      this.service_status = value;
-      this.status_dialog = true;
-      if(value == 1){
-         this.title = 'Desactivar registro';
+      editService(index){
+         const service = this.services[index]
+         this.catalog_selected = index
+         var service_id = service.id
+         this.$refs.services_form.editService(service_id)
+      },
+
+      openProcess(index){
+         const service = this.services[index]
+         var service_id = service.id
+         this.catalog_selected = index
+         this.$refs.process_form.openProcess(service_id)
+      },
+
+      newService(data){
+         this.services.unshift(data)
+      },
+
+      updateService(data){
+         // this.services[this.catalog_selected] = data
+         this.services.splice(this.catalog_selected,1,data)
+         this.catalog_selected = ''
+      },
+
+      async changeStatus(index, value){
+         this.loading = false
+         const service = this.services[index]
+         this.catalog_selected = index
+         this.services_catalog_id = service.id
+         this.service_status = value
+         await this.$axios.put(`${process.env.API}/catalog/status/${this.services_catalog_id}`, {status:this.service_status})
+         .then(res => {
+            this.services.splice([this.catalog_selected], 1, res.data)
+            this.catalog_selected = ''
+            this.services_catalog_id = ''
+            this.service_status = ''
+            this.loading = false
+            this.$q.notify({
+               message:'Se actualizó el estatus del servicio',
+               color:'positive',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
+         })
+         .catch(error => {
+            this.$q.notify({
+               message:'No se pudo cambiar el estatus, inténtelo más tarde',
+               color:'negative',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
+            this.loading = false
+         })
+      }, 
+
+      updateProcess(data){
+         this.services[this.catalog_selected].requisites = data
+         // this.catalog_selected = ''
       }
-      else if(value == 0){
-         this.title = 'Activar registro';
-      }
-   },
-
-   async changeStatus(){
-      this.loading = true;
-      await this.$axios.put(`/api/catalog/status/${this.services_catalog_id}`, {status:this.service_status})
-      .then(res => {
-         this.services[this.catalog_selected] = res.data;
-         this.snackbar = true;
-         this.snackColor = 'info';
-         this.snackText = 'Se cambió el estatus del servicio';
-         this.timeout = 1500;
-         this.catalog_selected = '';
-         this.services_catalog_id = '';
-         this.service_status = '';
-         this.loading = false;
-         this.status_dialog = false;
-      })
-      .catch(error => {
-         this.snackbar = true;
-         this.snackColor = 'error';
-         this.snackText = 'No se pudo cambiar el estatus, inténtelo de nuevo o refresque la página.';
-         this.timeout = 1500;
-         this.loading = false;
-         this.status_dialog = false
-      })
-   }, 
-
-   updateProcess(data){
-      this.services[this.catalog_selected].requisites = data;
-      // this.catalog_selected = '';
-   }
    } 
-   
 }
 </script>

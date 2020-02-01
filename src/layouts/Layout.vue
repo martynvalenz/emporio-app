@@ -119,7 +119,7 @@ export default {
 		// this.checkIfAuth()
 	},
 	computed:{
-		...mapState('auth', ['user_data', 'selected_company', 'companies', 'selected_store', 'stores', 'permissions']),
+		...mapState('auth', ['user_data', 'permissions']),
 	},
 	methods:{
 		...mapActions('auth', ['LogoutUser', 'checkIfAuthenticated', 'storeUser', 'setDark']),

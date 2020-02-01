@@ -1,6 +1,6 @@
 <template>
    <div>
-      <q-dialog v-model="service_dialog" maximized transition-show="slide-up" transition-hide="slide-down">
+      <q-dialog v-model="service_dialog" maximized persistent transition-show="slide-up" transition-hide="slide-down">
          <q-card>
             <q-bar class="bg-primary text-white">
                <div class="text-h6">Editar Proceso</div>
@@ -93,15 +93,15 @@
             <q-card-section>
                <div class="row">
                   <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 q-pa-xs" v-for="(requirement, index) in requisites" :key="index">
-                     <span v-if="requirement.category == 0">Dirección</span>
-                     <span v-if="requirement.category == 1">Jurídico</span>
-                     <span v-if="requirement.category == 2">Administración</span>
-                     <span v-if="requirement.category == 3">Gestión</span>
-                     <span v-if="requirement.category == 4">Operaciones</span>
-                     <span v-if="requirement.category == 5">Soporte</span>
-                     <span v-if="requirement.category == 6">Auditoría</span>
-                     <span v-if="requirement.category == 7">Ventas</span>
-                     <q-icon @click="edit(index)" v-if="requirement.status == 1" :color="requirement.color" name="edit" style="font-size:1.5em;" />
+                     <span v-if="requirement.category == 0">Dirección </span>
+                     <span v-if="requirement.category == 1">Jurídico </span>
+                     <span v-if="requirement.category == 2">Administración </span>
+                     <span v-if="requirement.category == 3">Gestión </span>
+                     <span v-if="requirement.category == 4">Operaciones </span>
+                     <span v-if="requirement.category == 5">Soporte </span>
+                     <span v-if="requirement.category == 6">Auditoría </span>
+                     <span v-if="requirement.category == 7">Ventas </span>
+                     <q-icon @click="edit(index)" :color="requirement.color" name="edit" style="font-size:1.5em;" />
                      <br>
                      <q-toggle :color="requirement.color" v-bind:class="[requirement.status == 0 ? 'inactive':'']" :value="requirement.selected" :true-value="1" :false-value="0" :label="requirement.requisite" append-icon="edit" @click:append="edit(index)" @input="Switch(index)" :disabled="requirement.status == 0" />
                   </div>
