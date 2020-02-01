@@ -5,7 +5,7 @@ export default ({router}) => {
 		if (!loggedIn && to.path.startsWith('/admin')) {
 		  next('/')
 		}
-		else if (loggedIn && to.path.startsWith('/auth')) {
+		else if (loggedIn && to.path === '/') {
 			next('/admin')
 		}
 		else {
