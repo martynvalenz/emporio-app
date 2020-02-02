@@ -45,9 +45,9 @@
                         </q-item-section>
                      </q-item> 
                      <q-separator inset/>
-                     <q-item v-ripple clickable v-for="(prog, index) in progress" :key="index">
+                     <q-item v-ripple  v-for="(prog, index) in progress" :key="index" >
                         <q-item-section side top>
-                           <q-checkbox v-model="prog.status" :false-value="0" :true-value="1" color="primary" :disabled="loading_check" @input="Check(index, prog.status)" />
+                           <q-checkbox v-model="prog.status" :false-value="0" :true-value="1" color="primary"  @input="Check(index, prog.status)" />
                         </q-item-section>
                         <q-item-section>
                            <q-item-label>{{prog.requisite}}</q-item-label>
