@@ -113,7 +113,7 @@
             </q-item>
             <q-item clickable v-ripple to="/admin/services/comissions" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
-                  Comisiones
+                  Catálogo de Comisiones
                </q-item-section>
                <q-item-section avatar>
                   <q-icon name="money" />

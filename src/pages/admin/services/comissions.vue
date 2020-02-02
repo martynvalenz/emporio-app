@@ -66,7 +66,7 @@
                         <q-btn color="grey" icon="menu" flat>
                            <q-badge v-if="reg.requisites > 0" color="secondary" floating>{{reg.requisites}}</q-badge>
                            <q-badge v-if="reg.requisites == 0" color="negative" floating>{{reg.requisites}}</q-badge>
-                           <q-menu>
+                           <q-menu auto-close>
                               <q-list>
                                  <q-item clickable @click="openProcess(index)" v-ripple >
                                     <q-item-section avatar>

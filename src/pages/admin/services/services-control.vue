@@ -1,5 +1,6 @@
 <template>
    <q-page padding>
+      <div><Progress ref="process_form" v-on:updateProgress="updateProgress($event)"></Progress></div>
       <div class="row">
          <div class="text-h5">Control de servicios</div>
          <q-space/>
@@ -13,8 +14,8 @@
             <div class="row">
                <q-btn label="Servicio" icon-right="add" color="blue-7" class="q-mx-xs" @click="addService" />
                <q-btn label="Paquete" icon-right="add" color="blue-8" class="q-mx-xs" @click="addPackage" />
-               <q-btn label="Cliente" icon-right="person_add" color="blue-9" class="q-mx-xs" to="/admin/services/comissions" />
-               <q-btn label="Factura" icon-right="add" color="blue-10" class="q-mx-xs" to="/admin/services/comissions" />
+               <q-btn label="Cliente" icon-right="person_add" color="blue-9" class="q-mx-xs" @click="createCustomer" />
+               <q-btn label="Factura" icon-right="add" color="blue-10" class="q-mx-xs" @click="addBill" />
                <q-space />
                <!-- <q-btn-toggle push class="q-mx-sm" glossy toggle-color="primary" v-model="service_control_view"
                   :options="[
@@ -84,6 +85,58 @@
                </thead>
                <tbody>
                   <tr v-for="(service, index) in services" :key="index">
+                     <q-menu context-menu touch-position auto-close>
+                        <q-list>
+                           <q-item clickable @click="EditService(index)" v-ripple class="text-orange">
+                              <q-item-section avatar>
+                                 <q-icon name="edit" />
+                              </q-item-section>
+                              <q-item-section>
+                                 Editar
+                              </q-item-section>
+                           </q-item>
+                           <q-item clickable @click="CheckList(index)" v-ripple>
+                              <q-item-section avatar>
+                                 <q-icon name="list" />
+                              </q-item-section>
+                              <q-item-section>
+                                 Proceso
+                              </q-item-section>
+                           </q-item>
+                           <q-item clickable @click="showComments(index)" v-ripple>
+                              <q-item-section avatar>
+                                 <q-icon name="comment" />
+                              </q-item-section>
+                              <q-item-section>
+                                 Comentarios
+                              </q-item-section>
+                           </q-item>
+                           <q-item clickable @click="showComissions(index)" v-ripple>
+                              <q-item-section avatar>
+                                 <q-icon name="attach_money" color="positive" />
+                              </q-item-section>
+                              <q-item-section>
+                                 Comisiones
+                              </q-item-section>
+                           </q-item>
+                           <q-item clickable v-if="service.status > 2" @click="ServiceChangeStatus(index, 'success')" v-ripple class="text-green">
+                              <q-item-section avatar>
+                                 <q-icon name="check" />
+                              </q-item-section>
+                              <q-item-section>
+                                 Activar
+                              </q-item-section>
+                           </q-item>
+                           <q-item clickable v-else @click="ServiceChangeStatus(index, 'error')" v-ripple class="text-red">
+                              <q-item-section avatar>
+                                 <q-icon name="block" />
+                              </q-item-section>
+                              <q-item-section>
+                                 Cancelar
+                              </q-item-section>
+                           </q-item>
+                        </q-list>
+                     </q-menu>
                      <td :title="service.id">{{ service.date }}</td>
                      <td>
                         {{ service.code }}<span v-if="service.brand"> - {{ service.brand }}</span><span v-if="service.class"> ({{service.class}})</span>
@@ -91,24 +144,32 @@
                      <td>{{ service.customer }}</td>
                      <td class="text-center">
                         <ul class="list-style: none;" v-for="(bill, index) in service.bills" :key="index">
-                           <a color="green" @click="editFolio(bill.id)" v-if="service.is_payed == 1 && service.status < 3">{{bill.folio}}</a>
+                           <a class="text-green" @click="editFolio(bill.id)" v-if="service.is_payed == 2 && service.status < 3">{{bill.folio}}</a>
                            <a v-else @click="editFolio(bill.id)">{{bill.folio}}</a>
                         </ul>
-                        <q-icon @click="createBill(index, 'Factura')" v-if="service.billed == 0 && service.status < 3" color="blue" name="add" style="font-size:18px;" />
+                        <q-btn icon="add" color="primary" flat round size="sm" @click="createBill(index, 'Factura')" v-if="service.billed == 0 && service.status < 3"/>
                      </td>
                      <td class="text-center">
                         <ul class="list-style: none;" v-for="(receipt, index) in service.receipts" :key="index">
-                           <a color="green" @click="editFolio(receipt.id)" v-if="service.is_payed == 1 && service.status < 3">{{receipt.folio}}</a>
+                           <a class="text-green" @click="editFolio(receipt.id)" v-if="service.is_payed == 2 && service.status < 3">{{receipt.folio}}</a>
                            <a @click="editFolio(receipt.id)" v-else>{{receipt.folio}}</a>
                         </ul>
-                        <q-icon @click="createReceipt(index, 'Recibo')" v-if="service.billed == 0 && service.status < 3" color="blue" name="add" style="font-size:18px;" />
+                        <q-btn icon="add" color="primary" flat round size="sm" @click="createReceipt(index, 'Recibo')" v-if="service.billed == 0 && service.status < 3"/>
                      </td>
                      <td class="text-right" :title="'Facturado:'+formatPrice(service.billing)+' | Cobrado:'+formatPrice(service.charged)+' | Saldo:'+formatPrice(service.balance)">{{ formatPrice(service.final_price) }}</td>
                      <td class="text-center">{{ service.resp }}</td>
                      <!-- Payments -->
                      <td v-if="service.status < 3" class="text-center">
-                        <q-chip v-if="service.is_payed == 1" size="sm" square color="orange" dark label="Pendiente"/>
-                        <q-chip v-if="service.is_payed == 2" size="sm" square dark color="positive" label="Pagado"/>
+                        <q-chip v-if="service.is_payed == 1" size="sm" square color="orange" dark label="Pendiente">
+                           <q-tooltip content-class="bg-blue-grey-10" content-style="font-size: 14px">
+                              Facturado: {{formatPrice(service.billing)}} | Cobrado: {{formatPrice(service.charged)}} | Saldo: {{formatPrice(service.balance)}}
+                           </q-tooltip>
+                        </q-chip>
+                        <q-chip v-if="service.is_payed == 2" size="sm" square dark color="positive" label="Pagado">
+                           <q-tooltip content-class="bg-blue-grey-10" content-style="font-size: 14px">
+                              Facturado: {{formatPrice(service.billing)}} | Cobrado: {{formatPrice(service.charged)}} | Saldo: {{formatPrice(service.balance)}}
+                           </q-tooltip>
+                        </q-chip>
                      </td>
                      <td v-else class="text-center">
                         <q-chip v-if="service.status == 3" size="sm" square dark color="negative" label="Cancelado"/>
@@ -126,7 +187,7 @@
                      <!-- Status -->
                      <td>
                         <q-btn color="grey" icon="menu" flat size="md">
-                           <q-menu>
+                           <q-menu auto-close>
                               <q-list>
                                  <q-item clickable @click="EditService(index)" v-ripple class="text-orange">
                                     <q-item-section avatar>
@@ -189,14 +250,20 @@
             </infinite-loading>
          </q-card-section>
          <q-card-section>
-            <Services :service_dialog="1" ref="services_form" v-on:addService="newService($event)" v-on:updateService="updateService($event)"></Services>
+            <Service ref="services_form" v-on:addService="newService($event)" v-on:updateService="updateService($event)"></Service>
+            <Customer ref="customers_form" v-on:storeCustomer="storeCustomer($event)"></Customer>
+            <Bill ref="bills_form" v-on:updateServices="Reload()" v-on:newBill="newBill($event)" v-on:updateBill="updateBill($event)" v-on:reloadBills="reloadBills"></Bill>
+            <Bill ref="bills_form" v-on:updateServices="Reload()" v-on:newBill="newBill($event)" v-on:updateBill="updateBill($event)" v-on:reloadBills="reloadBills"></Bill>
          </q-card-section>
       </q-card>
    </q-page>
 </template>
 
 <script>
-import Services from 'components/Services'
+import Service from 'components/Service'
+import Bill from 'components/Bill'
+import Customer from 'components/Customer'
+import Progress from 'components/Progress'
 import InfiniteLoading from 'vue-infinite-loading'
 import {mapActions, mapState} from 'vuex'
 export default {
@@ -206,7 +273,7 @@ export default {
       }
    },
 
-   components:{InfiniteLoading, Services},
+   components:{InfiniteLoading, Service, Customer, Bill, Progress},
 
    data(){
 		return{
@@ -329,8 +396,12 @@ export default {
 			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 		},
 
-		addCustomer(){
-			this.$refs.customer_form.addCustomer()
+		createCustomer(){
+			this.$refs.customers_form.createCustomer()
+      },
+      
+      storeCustomer(data){
+         //Only for customers view
 		},
 
 		addService(){
@@ -343,7 +414,19 @@ export default {
 
 		addBill(){
 			this.$refs.bills_form.addBill(1)
-		},
+      },
+
+      newBill(data){
+         //Only for bills view
+      },
+      
+      updateBill(data){
+         //Only for bills view
+      },
+
+      reloadBills(){
+         //Only for bills view
+      },
 		
 		createBill(index, type){
 			const bill = this.services[index]
@@ -389,7 +472,7 @@ export default {
 		},
 
 		updateService(data){
-			this.services[this.selected_service] = data
+			// this.services[this.selected_service] = data
 			this.services.splice(this.selected_service, 1, data)
 			this.selected_service = ''
 		}, 

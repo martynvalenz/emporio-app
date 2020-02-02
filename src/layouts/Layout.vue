@@ -20,7 +20,7 @@
 					<!-- <q-btn dense flat round icon="menu" @click="right = !right" /> -->
 					<q-avatar clickable v-ripple>
 						<img :src="user_data.avatar_img" style="border-radius:50%; border: 1px solid grey">
-						<q-menu>
+						<q-menu auto-close>
 							<div class="row no-wrap q-ma-xs">
 								<div class="column">
 									<q-item-label header>Menu de usuario</q-item-label>
@@ -60,9 +60,6 @@
 			<q-drawer :breakpoint="767" :width="250" show-if-above v-model="left" side="left" elevated>
 				<menu-list :user_data="user_data" :permissions="permissions"></menu-list>
 			</q-drawer>
-			<q-drawer v-model="right" side="right" dark bordered> 
-				<!-- drawer content -->
-			</q-drawer>
 			<!-- <q-page-container :style="$q.dark == false ? {'background':'grey'}"> -->
 			<q-page-container>
 				<router-view />
@@ -87,7 +84,7 @@ export default {
   data () {
 		return {
 			left: true,
-			right: false,
+			right: true,
 			mobileData: true,
       	bluetooth: false,
 			dark:true,

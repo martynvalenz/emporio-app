@@ -1084,6 +1084,7 @@ export default {
 
       ReloadService(){
          this.ClearData()
+         this.services_catalog_id = ''
          this.class_id = ''
          this.binnacle_id = ''
          this.comment = ''

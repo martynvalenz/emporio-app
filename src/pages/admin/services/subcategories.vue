@@ -60,7 +60,7 @@
                      </td>
                      <td class="text-right">
                         <q-btn color="grey" icon="menu" size="sm" flat>
-                           <q-menu>
+                            <q-menu auto-close>
                               <q-list>
                                  <q-item clickable @click="edit(index)" v-ripple class="text-orange">
                                     <q-item-section avatar>
