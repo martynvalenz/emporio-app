@@ -60,6 +60,14 @@ const actions = {
 
 	updateImage({commit}, data){
 		commit('updateImage', data)
+	},
+
+	changeBinnacle({commit}, data){
+		commit('changeBinnacle', data)
+	},
+
+	changeStatus({commit}, data){
+		commit('changeStatus', data)
 	}
 	
 }
@@ -83,6 +91,8 @@ const mutations = {
 	storeUser(state, data){
 		state.user_data = data.user
 		LocalStorage.set('isDark', data.user.dark)
+		LocalStorage.set('binnacles', data.user.binnacles)
+		LocalStorage.set('status_view', data.user.status_view)
 		state.permissions = data.init_data.original.permissions
 	},
 
@@ -109,6 +119,16 @@ const mutations = {
 
 	updateImage(state, data){
 		state.user_data.avatar_img = data
+	},
+
+	changeBinnacle(state, data){
+		state.user_data.binnacles = data.binnacles
+		LocalStorage.set('binnacles', data.binnacles)
+	},
+
+	changeStatus(state, data){
+		state.user_data.status_view = data.status_view
+		LocalStorage.set('status_view', data.status_view)
 	},
 }
 

@@ -403,6 +403,7 @@ export default {
          service_discount:0,
          discount:0,
          discount_percent:0,
+         price_desc:0,
          final_price:0,
          const_price:0,
          fee:0,

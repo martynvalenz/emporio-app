@@ -47,7 +47,7 @@
                      <q-separator inset/>
                      <q-item v-ripple  v-for="(prog, index) in progress" :key="index" >
                         <q-item-section side top>
-                           <q-checkbox v-model="prog.status" :false-value="0" :true-value="1" color="primary"  @input="Check(index, prog.status)" />
+                           <q-checkbox v-model="prog.status" :true-value="1" :false-value="0" color="primary"  @input="Check(index, prog.status)" :disable="loading_check" />
                         </q-item-section>
                         <q-item-section>
                            <q-item-label>{{prog.requisite}}</q-item-label>
@@ -71,6 +71,7 @@
 export default {
    data(){
       return {
+         skeleton:false,
          rightDrawer:false,
          loading_generate:false,
          loading_check:false,
@@ -92,6 +93,8 @@ export default {
 
    methods:{
       openProgress(id){
+         this.skeleton = true
+         this.progress.splice(0, this.progress.length)
          this.rightDrawer = true
          this.service_id = id
          this.getServicesProgress()
@@ -102,7 +105,6 @@ export default {
          .then(res => {
             let brand = ''
             let classer = ''
-
             if(res.data.service.class){
                classer = res.data.service.class
             }
@@ -112,7 +114,7 @@ export default {
             this.service =  '('+res.data.service.id+') '+res.data.service.code+' - '+brand+' '+classer
             this.customer = res.data.service.customer
             this.asign_cost = res.data.service.asign_cost
-            this.manage_cost = res.data.service.manage_cost
+            this.manage_cost = res.data.service.manage_cost * 1
             this.payed_cost = res.data.service.payed_cost
             this.cost = res.data.service.cost
             this.advance = res.data.service.advance
@@ -120,7 +122,16 @@ export default {
             this.advance_percent = Math.round(res.data.service.advance_percent)
             this.services_catalog_id = res.data.service.services_catalog_id
             this.is_payed = res.data.service.is_payed
-            this.progress = res.data.progress
+            res.data.progress.forEach((value, index) => {
+               let data = []
+
+               var status = ''
+               status = value.status * 1
+
+               data = {id:value.id, status:status, sales:value.sales, operations:value.operations, management:value.management, register:value.register, requisite:value.requisite, created_at:value.created_at, name:value.name, last_name:value.last_name, orden:value.orden, initials:value.initials, admin:value.admin, user_id:value.user_id, category:this.category}
+               this.progress.push(data)
+            })
+            this.skeleton = false
          })
       },
 
@@ -130,16 +141,16 @@ export default {
       },
 
       Clear(){
-
+         this.progress.splice(0, this.progress.length)
       },
 
       async ManageCost(){
          await this.$axios.put(`${process.env.API}/binnacles/manage-cost/${this.service_id}`, {manage_cost:this.manage_cost})
          .then(res => {
-               this.cost = res.data.cost
+            this.cost = res.data.cost
          })
          .catch(error => {
-               this.manage_cost = !this.manage_cost
+            this.manage_cost = !this.manage_cost
          })
       },
 
@@ -149,31 +160,65 @@ export default {
 
          await this.$axios.put(`${process.env.API}/binnacles/check-list/${check.id}`, {status:status, sales:check.sales, operations:check.operations, management:check.management, register:check.register, service_control_id:this.service_id, advance:this.advance, advance_total:this.advance_total})
          .then(res => {
-               this.progress[index].created_at = res.data.progress.original.created_at
-               this.progress[index].name = res.data.progress.original.name
-               this.progress[index].last_name = res.data.progress.original.last_name
-               this.advance = res.data.service.original.advance
-               this.advance_percent = Math.round(res.data.service.original.advance_percent)
-               this.$emit('updateProgress', res.data.service.original)
-               this.loading_check = false
+            this.progress[index].created_at = res.data.progress.original.created_at
+            this.progress[index].name = res.data.progress.original.name
+            this.progress[index].last_name = res.data.progress.original.last_name
+            this.advance = res.data.service.original.advance
+            this.advance_percent = Math.round(res.data.service.original.advance_percent)
+            this.$emit('updateProgress', res.data.service.original)
+            this.loading_check = false
          })
          .catch(error => {
-               console.log(error)
-               this.loading_check = false
+            this.$q.notify({
+               message:'No se pudo realizar la acción, inténtelo más tarde',
+               color:'negative',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
+            this.loading_check = false
+
+            this.clearClose()
          })
       },
 
       async GenerateProcess(){
          this.loading_generate = true
-         await this.$axios.post('${process.env.API}/binnacles/generate-process', {id:this.service_id, services_catalog_id:this.services_catalog_id})
+         await this.$axios.post(`${process.env.API}/binnacles/generate-process`, {id:this.service_id, services_catalog_id:this.services_catalog_id})
          .then(res => {
+            if(this.res.data.progress.length > 0){
                this.progress = res.data
                this.advance_percent = Math.round(res.data.service.advance_percent)
                this.loading_generate = false
+               this.$q.notify({
+                  message:'Se generó el proceso del servicio',
+                  color:'positive',
+                  actions: [
+                     { label: 'Cerrar', color: 'white', handler: () => {  } }
+                  ]
+               })
+            }
+            else if(this.res.data.progress.length == 0){
+               this.loading_generate = false
+               this.$q.notify({
+                  message:'No se pudo generar el proceso debido a que el servicio no tiene asignados pasos en el catálogo de servicios.',
+                  color:'negative',
+                  actions: [
+                     { label: 'Cerrar', color: 'white', handler: () => {  } }
+                  ]
+               })
+            }
+            
          })
          .catch(error => {
-               console.log(error)
-               this.loading_generate = false
+            this.loading_generate = false
+            this.$q.notify({
+               message:'No se pudo generar el proceso, inténtelo más tarde',
+               color:'negative',
+               actions: [
+                  { label: 'Cerrar', color: 'white', handler: () => {  } }
+               ]
+            })
          })
       },
 

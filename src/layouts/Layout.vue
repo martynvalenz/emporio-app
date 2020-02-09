@@ -7,7 +7,7 @@
 					<q-btn  flat round icon="menu" @click="left = !left" class="q-mr-xs" />
 					<q-separator dark vertical inset />
 					<q-toolbar-title>Emporio Legal</q-toolbar-title>
-					<q-btn dense round flat icon="mail" class="q-mr-sm">
+					<!-- <q-btn dense round flat icon="mail" class="q-mr-sm">
 						<q-badge color="red" floating>
 						4
 						</q-badge>
@@ -16,7 +16,7 @@
 						<q-badge color="red" floating>
 						4
 						</q-badge>
-					</q-btn>
+					</q-btn> -->
 					<!-- <q-btn dense flat round icon="menu" @click="right = !right" /> -->
 					<q-avatar clickable v-ripple>
 						<img :src="user_data.avatar_img" style="border-radius:50%; border: 1px solid grey">

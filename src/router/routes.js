@@ -21,9 +21,14 @@ const routes = [
 			: () => import('pages/admin/services/catalog.vue') },
 			{ path: '/admin/services/comissions', component: () => import('pages/admin/services/comissions.vue') },
 			{ path: '/admin/services/services-control', component: () => import('pages/admin/services/services-control.vue') },
+			{ path: '/admin/services/binnacles-procedures', component: () => import('pages/admin/services/binnacles-procedures.vue') },
+			{ path: '/admin/services/status', component: () => import('pages/admin/services/status.vue') },
 			//Customers
 			{ path: '/admin/customers/strategies', component: () => import('pages/admin/customers/strategies.vue') },
 			{ path: '/admin/customers/customers', component: () => import('pages/admin/customers/customers.vue') },
+			//Bills
+			{ path: '/admin/bills/bills', component: () => import('pages/admin/bills/bills.vue') },
+			{ path: '/admin/bills/receipts', component: () => import('pages/admin/bills/receipts.vue') },
 		]
 	 },
 ]

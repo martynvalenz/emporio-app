@@ -173,50 +173,25 @@
             </q-item-section>
          </q-item>
 
-         <q-expansion-item expand-separator icon="bookmarks" label="Bitácoras">
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
-               <q-item-section>
-                  Trámites Nuevos
-               </q-item-section>
-               <q-item-section avatar>
-                  <q-icon name="create_new_folder" />
-               </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
-               <q-item-section>
-                  Estudios de Factibilidad
-               </q-item-section>
-               <q-item-section avatar>
-                  <q-icon name="search" />
-               </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
-               <q-item-section>
-                  Negativas
-               </q-item-section>
-               <q-item-section avatar>
-                  <q-icon name="block" />
-               </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
-               <q-item-section>
-                  Requisitos y Objeciones
-               </q-item-section>
-               <q-item-section avatar>
-                  <q-icon name="unarchive" />
-               </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
-               <q-item-section>
-                  Títulos y Certificados
-               </q-item-section>
-               <q-item-section avatar>
-                  <q-icon name="assignment_late" />
-               </q-item-section>
-            </q-item>
-         </q-expansion-item>
+         <q-item clickable v-ripple to="/admin/services/binnacles-procedures" exact router>
+            <q-item-section avatar>
+               <q-icon name="bookmarks" />
+            </q-item-section>
+            <q-item-section>
+               Bitácoras
+            </q-item-section>
+         </q-item>
 
-         <q-expansion-item expand-separator icon="assignment" label="Estatus de Trámites">
+         <q-item clickable v-ripple to="/admin/services/status" exact router>
+            <q-item-section avatar>
+               <q-icon name="assignment" />
+            </q-item-section>
+            <q-item-section>
+               Estatus de Trámites
+            </q-item-section>
+         </q-item>
+
+         <!-- <q-expansion-item expand-separator icon="assignment" label="Estatus de Trámites">
             <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
                <q-item-section>
                   Signos Distintivos
@@ -267,7 +242,7 @@
                   Franquicias
                </q-item-section>
             </q-item>
-         </q-expansion-item>
+         </q-expansion-item> -->
          
          <q-expansion-item expand-separator icon="money" label="Comisiones">
             <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
@@ -291,7 +266,7 @@
          <q-item-label header>Administración</q-item-label>
 
          <q-expansion-item expand-separator icon="insert_drive_file" label="Facturación">
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
+            <q-item clickable v-ripple to="/admin/bills/bills" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
                   Facturas
                </q-item-section>
@@ -299,7 +274,7 @@
                   <q-icon name="description" />
                </q-item-section>
             </q-item>
-            <q-item clickable v-ripple to="" exact router class="q-pl-xl" expand-separator disabled>
+            <q-item clickable v-ripple to="/admin/bills/receipts" exact router class="q-pl-xl" expand-separator>
                <q-item-section>
                   Recibos
                </q-item-section>

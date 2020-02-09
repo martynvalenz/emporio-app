@@ -285,61 +285,67 @@ export default {
          this.service_catalog_id = service_id
          this.$axios.get(`${process.env.API}/catalog/edit/${service_id}`)
          .then(res => {
-               this.title = 'Editar servicio: ' + res.data.code
-               this.code = res.data.code
-               this.service = res.data.service
-               this.services_category_id = res.data.services_category_id
-               this.binnacle_id = res.data.binnacle_id
-               this.status_category_id = res.data.status_category_id
-               this.status_subcategory_id = res.data.status_subcategory_id
-               if(res.data.status_category_id){
-                  this.getSubcategories()
-               }
-               this.comments = res.data.comments
-               this.money_exchange_id = res.data.money_exchange_id
-               this.authorize = res.data.authorize
-               this.additional_service = res.data.additional_service
-               this.allow_finance = res.data.allow_finance
-               this.cost = (res.data.cost) * 1
-               this.external_fee = (res.data.external_fee) * 1
-               this.price = (res.data.price) * 1
-               this.sales = (res.data.sales) * 1
-               this.sales_comission = (res.data.sales_comission) * 1
-               this.operations = (res.data.operations) * 1
-               this.operations_comission = (res.data.operations_comission) * 1
-               this.management = (res.data.management) * 1
-               this.management_comission = (res.data.management_comission) * 1
+            this.title = 'Editar servicio: ' + res.data.code
+            this.code = res.data.code
+            this.service = res.data.service
+            if(res.data.services_category_id){
+               this.services_category_id = res.data.services_category_id * 1
+            }
+            if(res.data.binnacle_id){
+               this.binnacle_id = res.data.binnacle_id * 1
+            }
+            if(res.data.status_category_id){
+               this.getSubcategories()
+               this.status_category_id = res.data.status_category_id * 1
+            }
+            if(res.data.status_subcategory_id){
+               this.status_subcategory_id = res.data.status_subcategory_id * 1
+            }
+            this.comments = res.data.comments
+            this.money_exchange_id = res.data.money_exchange_id * 1
+            this.authorize = res.data.authorize * 1
+            this.additional_service = res.data.additional_service * 1
+            this.allow_finance = res.data.allow_finance * 1
+            this.cost = (res.data.cost) * 1
+            this.external_fee = (res.data.external_fee) * 1
+            this.price = (res.data.price) * 1
+            this.sales = (res.data.sales) * 1
+            this.sales_comission = (res.data.sales_comission) * 1
+            this.operations = (res.data.operations) * 1
+            this.operations_comission = (res.data.operations_comission) * 1
+            this.management = (res.data.management) * 1
+            this.management_comission = (res.data.management_comission) * 1
 
-               if(res.data.sales == 0){
-                  this.sales_percent = res.data.sales_comission
-                  this.sales_ammount = Math.round((res.data.sales_comission * res.data.fee) / 100)
-               }
-               else if(res.data.sales == 1){
-                  this.sales_comission = res.data.sales_comission
-                  this.sales_percent = Math.round((res.data.sales_comission * 100) / res.data.fee)
-               }
+            if(res.data.sales == 0){
+               this.sales_percent = res.data.sales_comission
+               this.sales_ammount = Math.round((res.data.sales_comission * res.data.fee) / 100)
+            }
+            else if(res.data.sales == 1){
+               this.sales_comission = res.data.sales_comission
+               this.sales_percent = Math.round((res.data.sales_comission * 100) / res.data.fee)
+            }
 
-               if(res.data.operations == 0){
-                  this.operations_percent = res.data.operations_comission
-                  this.operations_ammount = Math.round((res.data.operations_comission * res.data.fee) / 100)
-               }
-               else if(res.data.operations == 1){
-                  this.operations_comission = res.data.operations_comission
-                  this.operations_percent = Math.round((res.data.operations_comission * 100) / res.data.fee)
-               }
+            if(res.data.operations == 0){
+               this.operations_percent = res.data.operations_comission
+               this.operations_ammount = Math.round((res.data.operations_comission * res.data.fee) / 100)
+            }
+            else if(res.data.operations == 1){
+               this.operations_comission = res.data.operations_comission
+               this.operations_percent = Math.round((res.data.operations_comission * 100) / res.data.fee)
+            }
 
-               if(res.data.management == 0){
-                  this.management_percent = res.data.management_comission
-                  this.management_ammount = Math.round((res.data.management_comission * res.data.fee) / 100)
-               }
-               else if(res.data.management == 1){
-                  this.management_comission = res.data.management_comission
-                  this.management_percent = Math.round((res.data.management_comission * 100) / res.data.fee)
-               }
-               
-               this.fee = res.data.fee
-               this.utility = res.data.utility
-               this.utility_percent = res.data.utility_percent
+            if(res.data.management == 0){
+               this.management_percent = res.data.management_comission
+               this.management_ammount = Math.round((res.data.management_comission * res.data.fee) / 100)
+            }
+            else if(res.data.management == 1){
+               this.management_comission = res.data.management_comission
+               this.management_percent = Math.round((res.data.management_comission * 100) / res.data.fee)
+            }
+            
+            this.fee = res.data.fee
+            this.utility = res.data.utility
+            this.utility_percent = res.data.utility_percent
          })
          .catch(error => {
                this.service_dialog = false
