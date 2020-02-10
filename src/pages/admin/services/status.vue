@@ -113,8 +113,8 @@
                <thead>
                   <tr>
                      <th class="text-left" style="width:10%">Subcategoría</th>
-                     <th class="text-left" style="width:15%">Cliente</th>
                      <th class="text-left" style="width:15%">Marca</th>
+                     <th class="text-left" style="width:15%">Cliente</th>
                      <th class="text-left" style="width:10%">Expediente</th>
                      <th class="text-left" style="width:10%">Registro</th>
                      <th class="text-center" style="width:15%">Estatus</th>
@@ -141,8 +141,8 @@
                         </q-list>
                      </q-menu>
                      <td>{{service.subcategory}}</td>
-                     <td>{{ service.customer }}</td>
                      <td>{{ service.brand }}</td>
+                     <td>{{ service.customer }}</td>
                      <td>{{service.case_file}}</td>
                      <td>{{service.registry}}</td>
                      <td>{{service.status}}</td>
